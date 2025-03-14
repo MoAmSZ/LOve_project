@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-4">
+                <i class="fas fa-gift love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">فروشگاه هدایای عاشقانه</h2>
+                <p class="text-muted">با امتیازهای خود هدایای زیبا برای همراهتان بخرید</p>
+            </div>
+
+            <!-- Points Card -->
+            <div class="points-card glass-effect mb-4">
+                <div class="points-content">
+                    <div class="points-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="points-info">
+                        <h4 class="points-title">امتیاز شما</h4>
+                        <div class="points-value">{{ user_points }} امتیاز</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gifts Grid -->
+            <div class="row g-4">
+                {% if gifts %}
+                    {% for gift in gifts %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="gift-card glass-effect fade-in">
+                                <div class="gift-image">
+                                    {% if gift.image %}
+                                        <img src="{{ gift.image.url }}" alt="{{ gift.name }}" class="img-fluid">
+                                    {% else %}
+                                        <i class="fas fa-gift fa-4x"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="gift-content">
+                                    <h5 class="gift-name">{{ gift.name }}</h5>
+                                    <p class="gift-description">{{ gift.description }}</p>
+                                    <div class="gift-points">
+                                        <i class="fas fa-star me-1"></i>
+                                        {{ gift.points_cost }} امتیاز
+                                    </div>
+                                    <div class="gift-action">
+                                        {% if user_points >= gift.points_cost %}
+                                            <a href="{% url 'love_points:send_gift' gift.id %}" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane me-2"></i>
+                                                ارسال هدیه
+                                            </a>
+                                        {% else %}
+                                            <button class="btn btn-secondary" disabled>
+                                                <i class="fas fa-lock me-2"></i>
+                                                امتیاز ناکافی
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-box-open fa-3x mb-3"></i>
+                            <p>در حال حاضر هیچ هدیه‌ای در فروشگاه موجود نیست</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .love-icon {
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 89, 123, 0.3));
+        animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .points-card {
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .points-content {
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+
+    .points-icon {
+        font-size: 2.5rem;
+        margin-left: 1.5rem;
+        opacity: 0.9;
+    }
+
+    .points-info {
+        flex-grow: 1;
+    }
+
+    .points-title {
+        margin: 0;
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .points-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .gift-card {
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .gift-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 89, 123, 0.15);
+    }
+
+    .gift-image {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, rgba(255, 89, 123, 0.1), rgba(255, 142, 158, 0.1));
+        padding: 1.5rem;
+    }
+
+    .gift-image img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .gift-image i {
+        color: var(--primary-color);
+        opacity: 0.5;
+    }
+
+    .gift-content {
+        padding: 1.5rem;
+    }
+
+    .gift-name {
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 600;
+    }
+
+    .gift-description {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        min-height: 3rem;
+    }
+
+    .gift-points {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 89, 123, 0.1);
+        color: var(--primary-color);
+        border-radius: 20px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .gift-action {
+        text-align: center;
+    }
+
+    .gift-action .btn {
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    .btn-secondary {
+        background: var(--text-color);
+        border: none;
+        opacity: 0.7;
+    }
+
+    .btn-secondary:hover {
+        opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+        .points-card {
+            padding: 1rem;
+        }
+
+        .points-icon {
+            font-size: 2rem;
+            margin-left: 1rem;
+        }
+
+        .points-value {
+            font-size: 1.5rem;
+        }
+
+        .gift-image {
+            height: 150px;
+        }
+
+        .gift-content {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %} 

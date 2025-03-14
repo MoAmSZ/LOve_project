@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}آفلاین - سیستم امتیازدهی عاشقانه{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card glass-effect text-center p-5">
+                <div class="mb-4">
+                    <i class="fas fa-wifi-slash fa-4x text-muted"></i>
+                </div>
+                <h2 class="mb-4">اتصال به اینترنت برقرار نیست</h2>
+                <p class="lead mb-4">
+                    متأسفانه در حال حاضر به اینترنت دسترسی ندارید. لطفاً اتصال خود را بررسی کرده و دوباره تلاش کنید.
+                </p>
+                <button class="btn btn-primary" onclick="window.location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    تلاش مجدد
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fa-wifi-slash {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+{% endblock %} 

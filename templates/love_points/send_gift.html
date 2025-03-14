@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <i class="fas fa-gift love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">ارسال هدیه به {{ partner.username }}</h2>
+                <p class="text-muted">با یک پیام عاشقانه، هدیه خود را ارسال کنید</p>
+            </div>
+
+            <div class="card glass-effect">
+                <div class="card-body p-4">
+                    <div class="gift-preview mb-4">
+                        <div class="gift-image">
+                            {% if gift.image %}
+                                <img src="{{ gift.image.url }}" alt="{{ gift.name }}" class="img-fluid">
+                            {% else %}
+                                <i class="fas fa-gift fa-4x"></i>
+                            {% endif %}
+                        </div>
+                        <div class="gift-info">
+                            <h4 class="gift-name">{{ gift.name }}</h4>
+                            <p class="gift-description">{{ gift.description }}</p>
+                            <div class="gift-points">
+                                <i class="fas fa-star me-1"></i>
+                                {{ gift.points }} امتیاز
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" class="fade-in">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label for="message" class="form-label">پیام شما</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="پیام عاشقانه خود را بنویسید..." required></textarea>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="image" class="form-label">تصویر (اختیاری)</label>
+                            <div class="image-upload-container">
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                <div class="image-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>تصویری انتخاب کنید</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                ارسال هدیه
+                            </button>
+                            <a href="{% url 'love_points:gift_shop' %}" class="btn btn-outline-secondary btn-lg ms-2">
+                                <i class="fas fa-arrow-right me-2"></i>
+                                بازگشت
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .love-icon {
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 89, 123, 0.3));
+        animation: swing 3s ease infinite;
+    }
+
+    @keyframes swing {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-15deg); }
+        75% { transform: rotate(15deg); }
+    }
+
+    .gift-preview {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        background: rgba(255, 89, 123, 0.05);
+        border-radius: 15px;
+    }
+
+    .gift-image {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 1.5rem;
+        background: white;
+        border-radius: 15px;
+        padding: 1rem;
+    }
+
+    .gift-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .gift-image i {
+        color: var(--primary-color);
+        opacity: 0.5;
+    }
+
+    .gift-info {
+        flex-grow: 1;
+    }
+
+    .gift-name {
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .gift-description {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .gift-points {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 89, 123, 0.1);
+        color: var(--primary-color);
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .form-label {
+        color: var(--text-color);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid rgba(255, 89, 123, 0.2);
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(255, 89, 123, 0.25);
+    }
+
+    .image-upload-container {
+        position: relative;
+        border: 2px dashed rgba(255, 89, 123, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .image-upload-container:hover {
+        border-color: var(--primary-color);
+    }
+
+    .image-upload-container input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .image-upload-icon {
+        color: var(--primary-color);
+    }
+
+    .image-upload-icon i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .image-upload-icon span {
+        display: block;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+    }
+
+    .btn-outline-secondary:hover {
+        background: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .gift-preview {
+            flex-direction: column;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .gift-image {
+            margin: 0 0 1rem 0;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn + .btn {
+            margin-right: 0 !important;
+        }
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-4">
+                <i class="fas fa-trophy love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">چالش‌های عاشقانه</h2>
+                <p class="text-muted">با شرکت در چالش‌های مختلف، رابطه خود را قوی‌تر کنید</p>
+            </div>
+
+            <!-- Active Challenges -->
+            <div class="card glass-effect mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-running me-2"></i>
+                        چالش‌های فعال
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if active_challenges %}
+                        <div class="row g-4">
+                            {% for challenge in active_challenges %}
+                                <div class="col-md-6">
+                                    <div class="challenge-card active-challenge fade-in">
+                                        <div class="challenge-status">
+                                            {% if challenge.partner_confirmation %}
+                                                <span class="status-badge confirmed">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    تایید شده
+                                                </span>
+                                            {% else %}
+                                                <span class="status-badge pending">
+                                                    <i class="fas fa-clock"></i>
+                                                    در انتظار تایید
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <h5 class="challenge-title">{{ challenge.challenge.title }}</h5>
+                                        <p class="challenge-description">{{ challenge.challenge.description }}</p>
+                                        <div class="challenge-meta">
+                                            <div class="meta-item">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>شروع: {{ challenge.created_at|date:"Y/m/d" }}</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-hourglass-end"></i>
+                                                <span>پایان: {{ challenge.end_date|date:"Y/m/d" }}</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-star"></i>
+                                                <span>{{ challenge.challenge.points_reward }} امتیاز</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-flag fa-3x mb-3"></i>
+                            <p>در حال حاضر در هیچ چالشی شرکت نکرده‌اید</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Completed Challenges -->
+            <div class="card glass-effect mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-check-circle me-2"></i>
+                        چالش‌های تکمیل شده
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if completed_challenges %}
+                        <div class="row g-4">
+                            {% for challenge in completed_challenges %}
+                                <div class="col-md-6">
+                                    <div class="challenge-card completed-challenge fade-in">
+                                        <div class="challenge-status">
+                                            <span class="status-badge completed">
+                                                <i class="fas fa-trophy"></i>
+                                                تکمیل شده
+                                            </span>
+                                        </div>
+                                        <h5 class="challenge-title">{{ challenge.challenge.title }}</h5>
+                                        <p class="challenge-description">{{ challenge.challenge.description }}</p>
+                                        <div class="challenge-meta">
+                                            <div class="meta-item">
+                                                <i class="fas fa-calendar-check"></i>
+                                                <span>تکمیل: {{ challenge.updated_at|date:"Y/m/d" }}</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-star"></i>
+                                                <span>{{ challenge.challenge.points_reward }} امتیاز</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-medal fa-3x mb-3"></i>
+                            <p>هنوز هیچ چالشی را تکمیل نکرده‌اید</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Available Challenges -->
+            <div class="card glass-effect">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        چالش‌های موجود
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if available_challenges %}
+                        <div class="row g-4">
+                            {% for challenge in available_challenges %}
+                                <div class="col-md-6">
+                                    <div class="challenge-card available-challenge fade-in">
+                                        <h5 class="challenge-title">{{ challenge.title }}</h5>
+                                        <p class="challenge-description">{{ challenge.description }}</p>
+                                        <div class="challenge-meta">
+                                            <div class="meta-item">
+                                                <i class="fas fa-clock"></i>
+                                                <span>{{ challenge.duration }} روز</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-star"></i>
+                                                <span>{{ challenge.points }} امتیاز</span>
+                                            </div>
+                                        </div>
+                                        <div class="challenge-action">
+                                            <a href="{% url 'love_points:join_challenge' challenge.id %}" class="btn btn-primary">
+                                                <i class="fas fa-play me-2"></i>
+                                                شروع چالش
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                            <p>در حال حاضر چالش جدیدی برای شروع وجود ندارد</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Partner's Challenges Needing Confirmation -->
+            {% if partner_challenges %}
+            <div class="card glass-effect mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-heart me-2"></i>
+                        چالش‌های پارتنر شما
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for challenge in partner_challenges %}
+                            <div class="col-md-6">
+                                <div class="challenge-card partner-challenge fade-in">
+                                    <div class="challenge-status">
+                                        <span class="status-badge needs-confirmation">
+                                            <i class="fas fa-question-circle"></i>
+                                            نیاز به تایید شما
+                                        </span>
+                                    </div>
+                                    <h5 class="challenge-title">{{ challenge.challenge.title }}</h5>
+                                    <p class="challenge-description">{{ challenge.challenge.description }}</p>
+                                    <div class="challenge-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-user"></i>
+                                            <span>{{ challenge.profile.user.username }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>شروع: {{ challenge.created_at|date:"Y/m/d" }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-star"></i>
+                                            <span>{{ challenge.challenge.points_reward }} امتیاز</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="{% url 'love_points:confirm_challenge' challenge.id %}" class="btn btn-primary">
+                                            <i class="fas fa-check me-2"></i>
+                                            تایید چالش
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .love-icon {
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 89, 123, 0.3));
+        animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .challenge-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        height: 100%;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .challenge-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 89, 123, 0.1);
+    }
+
+    .challenge-status {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .status-badge i {
+        margin-left: 0.5rem;
+    }
+
+    .status-badge.confirmed {
+        background: rgba(0, 200, 81, 0.1);
+        color: #00c851;
+    }
+
+    .status-badge.pending {
+        background: rgba(255, 187, 51, 0.1);
+        color: #ffbb33;
+    }
+
+    .status-badge.completed {
+        background: rgba(255, 89, 123, 0.1);
+        color: var(--primary-color);
+    }
+
+    .challenge-title {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        padding-left: 4rem;
+    }
+
+    .challenge-description {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        min-height: 3rem;
+    }
+
+    .challenge-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+
+    .meta-item i {
+        margin-left: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .challenge-action {
+        text-align: center;
+    }
+
+    .active-challenge {
+        border-right: 4px solid var(--primary-color);
+    }
+
+    .completed-challenge {
+        border-right: 4px solid var(--success-color);
+    }
+
+    .available-challenge {
+        border-right: 4px solid var(--secondary-color);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .challenge-card {
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-title {
+            font-size: 1.1rem;
+            padding-left: 0;
+            margin-top: 2.5rem;
+        }
+
+        .challenge-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .meta-item {
+            width: 100%;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            margin-bottom: 1rem;
+        }
+
+        .card-header {
+            padding: 0.75rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .row.g-4 {
+            margin: -0.5rem;
+        }
+
+        .col-md-6 {
+            padding: 0.5rem;
+        }
+    }
+</style>
+{% endblock %} 

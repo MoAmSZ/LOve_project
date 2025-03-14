@@ -1,0 +1,51 @@
+{
+    "name": "سیستم امتیازدهی عاشقانه",
+    "short_name": "Love Points",
+    "description": "سیستم امتیازدهی و مدیریت رابطه عاشقانه",
+    "start_url": "/?source=pwa",
+    "id": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#ffffff",
+    "theme_color": "#ff597b",
+    "dir": "rtl",
+    "lang": "fa-IR",
+    "categories": ["lifestyle", "social"],
+    "icons": [
+        {
+            "src": "/static/icons/icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "512x512",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/icons/icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/static/icons/icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "512x512",
+            "form_factor": "wide"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "امتیاز دادن",
+            "url": "/give-points",
+            "description": "امتیاز دادن به همسر"
+        },
+        {
+            "name": "فروشگاه هدایا",
+            "url": "/gift-shop",
+            "description": "خرید هدیه با امتیازها"
+        }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false
+} 

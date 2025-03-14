@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <i class="fas fa-envelope-open love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">جزئیات پیام سورپرایز</h2>
+                {% if message.sender == user.profile %}
+                    <p class="text-muted">پیام ارسالی به {{ message.receiver.user.username }}</p>
+                {% else %}
+                    <p class="text-muted">پیام دریافتی از {{ message.sender.user.username }}</p>
+                {% endif %}
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card glass-effect">
+                <div class="card-body p-4">
+                    <div class="message-header">
+                        <div class="message-meta">
+                            <span class="message-date">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                تاریخ ارسال: {{ message.created_at|date:"Y/m/d H:i" }}
+                            </span>
+                            <span class="message-open-date">
+                                <i class="fas fa-clock me-2"></i>
+                                تاریخ باز شدن: {{ message.open_date|date:"Y/m/d H:i" }}
+                            </span>
+                        </div>
+                        <div class="message-status">
+                            {% if message.is_opened %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-double me-1"></i>
+                                    خوانده شده
+                                </span>
+                            {% else %}
+                                {% if message.open_date > now %}
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-lock me-1"></i>
+                                        قفل شده
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-envelope me-1"></i>
+                                        آماده برای خواندن
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if can_view %}
+                        <div class="message-content fade-in mt-4">
+                            <div class="message-text">
+                                {{ message.message|linebreaks }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="message-locked text-center py-5 mt-4">
+                            <i class="fas fa-lock fa-3x mb-3"></i>
+                            <h4>این پیام هنوز قابل مشاهده نیست</h4>
+                            <p class="text-muted">این پیام در تاریخ {{ message.open_date|date:"Y/m/d H:i" }} قابل مشاهده خواهد بود.</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'love_points:surprise_messages' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            بازگشت به لیست پیام‌ها
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .love-icon {
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 89, 123, 0.3));
+        animation: openEnvelope 2s ease infinite;
+    }
+
+    @keyframes openEnvelope {
+        0% { transform: scale(1) rotate(0); }
+        50% { transform: scale(1.1) rotate(5deg); }
+        100% { transform: scale(1) rotate(0); }
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .message-meta {
+        display: flex;
+        gap: 1.5rem;
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+
+    .message-content {
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+    }
+
+    .message-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text-color);
+    }
+
+    .message-locked {
+        color: var(--text-color);
+        opacity: 0.7;
+    }
+
+    .message-locked i {
+        color: var(--warning-color);
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .message-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .message-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .message-text {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %} 

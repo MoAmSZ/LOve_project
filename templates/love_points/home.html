@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- کارت پروفایل -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-circle fa-4x mb-3 text-primary"></i>
+                <h4>{{ profile.user.username }}</h4>
+                <p class="text-muted">امتیاز کل: {{ profile.points }}</p>
+                <p class="text-muted">سطح: {{ profile.level }}</p>
+                {% if profile.partner %}
+                    <p class="text-success">
+                        <i class="fas fa-heart"></i>
+                        پارتنر: {{ profile.partner.user.username }}
+                    </p>
+                {% else %}
+                    <p class="text-danger">هنوز پارتنری انتخاب نکرده‌اید</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- آخرین امتیازات -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-star text-warning"></i> آخرین امتیازات دریافتی</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_points %}
+                    <ul class="list-group list-group-flush">
+                    {% for point in recent_points %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>{{ point.points }} امتیاز از {{ point.giver.user.username }}</span>
+                                <small class="text-muted">{{ point.created_at|date:"Y/m/d" }}</small>
+                            </div>
+                            {% if point.action %}
+                                <small class="text-muted">{{ point.action.name }}</small>
+                            {% endif %}
+                            {% if point.custom_description %}
+                                <p class="mb-0 small">{{ point.custom_description }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">هنوز امتیازی دریافت نکرده‌اید</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- آخرین هدایا -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-gift text-danger"></i> آخرین هدایای دریافتی</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_gifts %}
+                    <ul class="list-group list-group-flush">
+                    {% for gift in recent_gifts %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>{{ gift.gift.name }} از {{ gift.sender.user.username }}</span>
+                                <small class="text-muted">{{ gift.created_at|date:"Y/m/d" }}</small>
+                            </div>
+                            {% if gift.message %}
+                                <p class="mb-0 small">{{ gift.message }}</p>
+                            {% endif %}
+                            {% if gift.image %}
+                                <img src="{{ gift.image.url }}" class="img-fluid mt-2 rounded" alt="تصویر هدیه">
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">هنوز هدیه‌ای دریافت نکرده‌اید</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- چالش‌های فعال -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tasks text-primary"></i> چالش‌های فعال</h5>
+            </div>
+            <div class="card-body">
+                {% if active_challenges %}
+                    <div class="row">
+                    {% for challenge in active_challenges %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ challenge.challenge.title }}</h5>
+                                    <p class="card-text">{{ challenge.challenge.description }}</p>
+                                    <p class="text-muted">
+                                        <small>
+                                            شروع: {{ challenge.start_date|date:"Y/m/d" }}<br>
+                                            پایان: {{ challenge.end_date|date:"Y/m/d" }}
+                                        </small>
+                                    </p>
+                                    <div class="text-end">
+                                        <span class="badge bg-primary">{{ challenge.challenge.points_reward }} امتیاز</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">هیچ چالش فعالی ندارید</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- نشان‌های افتخار -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-medal text-warning"></i> نشان‌های افتخار</h5>
+            </div>
+            <div class="card-body">
+                {% if badges %}
+                    <div class="row">
+                    {% for user_badge in badges %}
+                        <div class="col-md-2 col-sm-4 col-6 text-center mb-3">
+                            {% if user_badge.badge.image %}
+                                <img src="{{ user_badge.badge.image.url }}" class="img-fluid mb-2" alt="{{ user_badge.badge.name }}" style="max-width: 100px;">
+                            {% else %}
+                                <i class="fas fa-award fa-3x text-warning mb-2"></i>
+                            {% endif %}
+                            <p class="mb-0">{{ user_badge.badge.name }}</p>
+                            <small class="text-muted">{{ user_badge.earned_at|date:"Y/m/d" }}</small>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">هنوز نشانی دریافت نکرده‌اید</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

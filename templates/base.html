@@ -1,0 +1,138 @@
+{% load static %}
+{% load pwa %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    {% progressive_web_app_meta %}
+    <title>{% block title %}سیستم امتیازدهی عاشقانه{% endblock %}</title>
+    <!-- Bootstrap RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Iran Sans Font -->
+    <link href="https://fonts.cdnfonts.com/css/iranian-sans" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- PWA Support -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#ff597b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Love Points">
+    <link rel="apple-touch-icon" href="{% static 'icons/icon-152x152.png' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4 sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'love_points:home' %}">
+                <i class="fas fa-heart love-icon"></i> سیستم امتیازدهی عاشقانه
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" nonce="{{ request.csp_nonce }}">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link fade-in" href="{% url 'love_points:profile' %}">
+                                <i class="fas fa-user me-2"></i>پروفایل
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fade-in" href="{% url 'love_points:give_points' %}">
+                                <i class="fas fa-star me-2"></i>امتیاز دادن
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'love_points:gift_shop' %}">
+                                <i class="fas fa-gift me-2"></i>
+                                فروشگاه هدایا
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'love_points:received_gifts' %}">
+                                <i class="fas fa-gifts me-2"></i>
+                                هدایای دریافتی
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fade-in" href="{% url 'love_points:challenges' %}">
+                                <i class="fas fa-trophy me-2"></i>چالش‌ها
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fade-in" href="{% url 'love_points:memories' %}">
+                                <i class="fas fa-book me-2"></i>خاطرات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fade-in" href="{% url 'love_points:surprise_messages' %}">
+                                <i class="fas fa-envelope me-2"></i>پیام‌های سورپرایز
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout_confirm' %}" class="nav-link" style="margin: 0; padding: 0;" nonce="{{ request.csp_nonce }}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn nav-link glass-effect" style="border: none;" nonce="{{ request.csp_nonce }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>خروج
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <button id="add-to-home-screen" class="btn nav-link glass-effect" style="display: none; border: none;" nonce="{{ request.csp_nonce }}">
+                                <i class="fas fa-download me-2"></i>نصب اپلیکیشن
+                            </button>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link glass-effect" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-2"></i>ورود
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container fade-in">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show glass-effect" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" nonce="{{ request.csp_nonce }}"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'js/main.js' %}"></script>
+    <!-- PWA Registration -->
+    <script nonce="{{ request.csp_nonce }}">
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/serviceworker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope:', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 

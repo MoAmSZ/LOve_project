@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-4">
+                <i class="fas fa-gifts love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">هدایای دریافتی</h2>
+                <p class="text-muted">هدایای عاشقانه‌ای که از همراهتان دریافت کرده‌اید</p>
+            </div>
+
+            {% if received_gifts %}
+                <div class="row g-4">
+                    {% for gift in received_gifts %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="gift-card glass-effect fade-in">
+                                <div class="gift-image">
+                                    {% if gift.image %}
+                                        <img src="{{ gift.image.url }}" alt="{{ gift.gift.name }}" class="img-fluid">
+                                    {% elif gift.gift.image %}
+                                        <img src="{{ gift.gift.image.url }}" alt="{{ gift.gift.name }}" class="img-fluid">
+                                    {% else %}
+                                        <i class="fas fa-gift fa-4x"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="gift-content">
+                                    <div class="gift-header">
+                                        <h5 class="gift-name">{{ gift.gift.name }}</h5>
+                                        <span class="gift-date">{{ gift.created_at|date:"Y/m/d" }}</span>
+                                    </div>
+                                    <div class="sender-info mb-3">
+                                        <i class="fas fa-heart me-1"></i>
+                                        از طرف {{ gift.sender.user.username }}
+                                    </div>
+                                    <p class="gift-message">{{ gift.message|truncatechars:100 }}</p>
+                                    <div class="gift-action">
+                                        <a href="{% url 'love_points:gift_detail' gift.id %}" class="btn btn-primary">
+                                            <i class="fas fa-eye me-2"></i>
+                                            مشاهده کامل
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <p>هنوز هدیه‌ای دریافت نکرده‌اید</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .love-icon {
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 89, 123, 0.3));
+        animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0) rotate(0); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .gift-card {
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .gift-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 89, 123, 0.15);
+    }
+
+    .gift-image {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, rgba(255, 89, 123, 0.1), rgba(255, 142, 158, 0.1));
+        padding: 1.5rem;
+    }
+
+    .gift-image img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .gift-image i {
+        color: var(--primary-color);
+        opacity: 0.5;
+    }
+
+    .gift-content {
+        padding: 1.5rem;
+    }
+
+    .gift-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .gift-name {
+        margin: 0;
+        color: var(--text-color);
+        font-weight: 600;
+    }
+
+    .gift-date {
+        font-size: 0.9rem;
+        color: var(--text-color);
+        opacity: 0.7;
+    }
+
+    .sender-info {
+        color: var(--primary-color);
+        font-size: 0.95rem;
+    }
+
+    .gift-message {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        min-height: 3rem;
+    }
+
+    .gift-action {
+        text-align: center;
+    }
+
+    .gift-action .btn {
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .gift-image {
+            height: 150px;
+        }
+
+        .gift-content {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %} 

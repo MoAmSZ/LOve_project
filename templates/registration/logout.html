@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="text-center mb-4">
+                <i class="fas fa-heart-broken love-icon fa-3x mb-3"></i>
+                <h2 class="mb-3">خروج از سیستم</h2>
+                <p class="text-muted">آیا مطمئن هستید که می‌خواهید خارج شوید؟</p>
+            </div>
+            <div class="card glass-effect">
+                <div class="card-body p-4">
+                    <form method="post" action="{% url 'logout_confirm' %}" class="fade-in">
+                        {% csrf_token %}
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                بله، خارج می‌شوم
+                            </button>
+                            <a href="{% url 'love_points:home' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-home me-2"></i>
+                                بازگشت به خانه
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card.glass-effect {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px rgba(255, 89, 123, 0.1);
+    }
+
+    .card.glass-effect::before {
+        display: none;
+    }
+
+    .btn {
+        height: 3.5rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #FF6B6B, #FF8787);
+        border: none;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #FF8787, #FF6B6B);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+    }
+
+    .btn-outline-secondary:hover {
+        background: var(--secondary-color);
+        border-color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    .love-icon {
+        color: var(--danger-color);
+        filter: drop-shadow(0 2px 4px rgba(255, 107, 107, 0.3));
+        animation: heartBroken 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartBroken {
+        0% { transform: scale(1) rotate(0); }
+        50% { transform: scale(1.1) rotate(-5deg); }
+        100% { transform: scale(1) rotate(0); }
+    }
+
+    @media (max-width: 768px) {
+        .container.mt-5 {
+            margin-top: 2rem !important;
+        }
+    }
+</style>
+{% endblock %} 
