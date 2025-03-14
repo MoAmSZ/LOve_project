@@ -1,7 +1,5 @@
 @font-face {
-    font-family: 'IraSans';
-    src: url('../fonts/IranianSans.woff2') format('woff2'),
-         url('../fonts/IranianSans.woff') format('woff');
+    font-family: 'IRANSans';
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -29,7 +27,7 @@ html, body {
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: 'Iranian Sans', sans-serif;
+    font-family: 'IranSans', sans-serif;
     min-height: 100vh;
     padding: 0;
     margin: 0;
